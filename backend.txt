@@ -1,0 +1,72 @@
+backend/
+├── app/
+│   ├── main.py                        # FastAPI app entry point
+│
+│   ├── api/
+│   │   ├── __init__.py
+│   │   └── routes/
+│   │       ├── __init__.py
+│   │       ├── upload.py              # /upload YAML route
+│   │       └── validate.py            # /validate YAML route
+│
+│   ├── core/
+│   │   ├── __init__.py
+│   │   ├── config.py                  # Environment & app settings
+│   │   └── logging.py                 # File + console logging setup
+│
+│   ├── db/
+│   │   ├── __init__.py
+│   │   └── mongo.py                   # MongoDB connection (try-catch)
+│
+│   ├── schemas/
+│   │   ├── __init__.py
+│   │   ├── base.py                    # Shared base schemas
+│   │   ├── metadata.py                # name, description, version
+│   │   ├── entities.py
+│   │   ├── key_terms.py
+│   │   ├── entity_aliases.py
+│   │   ├── extraction_patterns.py
+│   │   ├── business_context.py
+│   │   ├── relationship_types.py
+│   │   ├── relationships.py
+│   │   ├── business_patterns.py
+│   │   ├── reasoning_templates.py
+│   │   ├── multihop_questions.py
+│   │   ├── question_templates.py
+│   │   ├── business_rules.py
+│   │   ├── validation_rules.py
+│   │   └── domain_config.py           # Aggregates all sections
+│
+│   ├── services/
+│   │   ├── __init__.py
+│   │   ├── upload_service.py           # YAML processing + persistence
+│   │   ├── validation_service.py       # YAML validation logic
+│   │   └── retrieval_service.py        # Future updates & fetch logic
+│
+│   ├── models/
+│   │   ├── __init__.py
+│   │   └── yaml_document.py            # MongoDB document builder
+│
+│   ├── utils/
+│   │   ├── __init__.py
+│   │   ├── yaml_loader.py              # YAML file loading
+│   │   ├── yaml_parser.py              # YAML → dict parsing
+│   │   └── validators.py               # Helper validation utilities
+│
+│   └── constants/
+│       ├── __init__.py
+│       └── allowed_sections.py         # Expected YAML sections list
+│
+├── logs/
+│   └── app.log                         # Persistent backend logs
+│
+├── tests/
+│   ├── __init__.py
+│   ├── test_upload.py
+│   ├── test_validation.py
+│   └── test_parsing.py
+│
+├── .env                                # Mongo URI, env variables
+├── .gitignore
+├── requirements.txt
+├── README.md

@@ -1,0 +1,585 @@
+name: "Legal"
+description: "Legal and compliance domain"
+version: "3.0.0"
+
+entities:
+  - name: "Client"
+    type: "CLIENT"
+    attributes:
+      - "client_id"
+      - "name"
+      - "type"
+      - "industry"
+      - "contact_info"
+      - "address"
+      - "phone"
+      - "email"
+      - "legal_entity_type"
+      - "registration_number"
+      - "pan_number"
+      - "aadhaar_number"
+      - "gst_number"
+      - "incorporation_date"
+      - "authorized_signatory"
+      - "business_nature"
+    synonyms:
+      - "customer"
+      - "party"
+      - "entity"
+      - "plaintiff"
+      - "defendant"
+      - "respondent"
+      - "petitioner"
+      - "appellant"
+      - "claimant"
+
+  - name: "Case"
+    type: "CASE"
+    attributes:
+      - "case_number"
+      - "title"
+      - "status"
+      - "jurisdiction"
+      - "filing_date"
+      - "court"
+      - "judge"
+      - "case_type"
+      - "priority"
+      - "estimated_value"
+      - "outcome"
+      - "dispute_amount"
+      - "cause_of_action"
+      - "relief_sought"
+      - "next_hearing_date"
+      - "case_stage"
+      - "appeal_status"
+    synonyms:
+      - "matter"
+      - "litigation"
+      - "proceeding"
+      - "action"
+      - "lawsuit"
+      - "dispute"
+      - "claim"
+      - "complaint"
+      - "petition"
+      - "appeal"
+      - "writ"
+      - "suit"
+
+  - name: "Legal Document"
+    type: "LEGAL_DOCUMENT"
+    attributes:
+      - "document_type"
+      - "title"
+      - "date"
+      - "author"
+      - "status"
+      - "version"
+      - "confidentiality_level"
+      - "review_status"
+      - "approval_date"
+      - "expiration_date"
+    synonyms:
+      - "contract"
+      - "agreement"
+      - "brief"
+      - "motion"
+      - "pleading"
+      - "memorandum"
+      - "opinion"
+      - "order"
+      - "judgment"
+      - "decree"
+      - "settlement"
+      - "release"
+
+  - name: "Attorney"
+    type: "ATTORNEY"
+    attributes:
+      - "name"
+      - "bar_number"
+      - "specialization"
+      - "firm"
+      - "contact"
+      - "bar_admission_date"
+      - "jurisdictions"
+      - "hourly_rate"
+      - "billing_method"
+      - "availability"
+    synonyms:
+      - "lawyer"
+      - "counsel"
+      - "legal_counsel"
+      - "advocate"
+      - "barrister"
+      - "solicitor"
+      - "legal_advisor"
+
+  - name: "Court"
+    type: "COURT"
+    attributes:
+      - "name"
+      - "jurisdiction"
+      - "level"
+      - "address"
+      - "phone"
+      - "website"
+      - "clerk"
+      - "rules"
+    synonyms:
+      - "tribunal"
+      - "forum"
+      - "venue"
+      - "judicial_body"
+
+  - name: "Legal Issue"
+    type: "LEGAL_ISSUE"
+    attributes:
+      - "issue_type"
+      - "description"
+      - "severity"
+      - "priority"
+      - "status"
+      - "resolution"
+      - "precedent"
+    synonyms:
+      - "legal_problem"
+      - "dispute"
+      - "controversy"
+      - "matter"
+      - "question_of_law"
+
+  - name: "PAN"
+    type: "PAN"
+    attributes:
+      - "pan_number"
+      - "holder_name"
+      - "holder_type"
+      - "status"
+      - "issue_date"
+      - "jurisdiction"
+    synonyms:
+      - "permanent_account_number"
+      - "tax_id"
+      - "taxpayer_id"
+      - "income_tax_number"
+      - "pan_card"
+
+extraction_patterns:
+  - pattern: "Case No\\.: (?P<case_number>[A-Z0-9-]+)"
+    entity_type: "CASE"
+    attribute: "case_number"
+    confidence: 0.95
+
+  - pattern: "Client: (?P<name>[A-Za-z\\s,]+)"
+    entity_type: "CLIENT"
+    attribute: "name"
+    confidence: 0.90
+
+  - pattern: "Attorney: (?P<name>[A-Za-z\\s]+), Bar #(?P<bar_number>[0-9]+)"
+    entity_type: "ATTORNEY"
+    attribute: "name"
+    confidence: 0.95
+
+  - pattern: "Court: (?P<court_name>[A-Za-z\\s]+)"
+    entity_type: "COURT"
+    attribute: "name"
+    confidence: 0.90
+
+  - pattern: "Document Type: (?P<doc_type>[A-Za-z\\s]+)"
+    entity_type: "LEGAL_DOCUMENT"
+    attribute: "document_type"
+    confidence: 0.85
+
+  - pattern: "PAN[\\s:]*([A-Z]{5}[0-9]{4}[A-Z]{1})"
+    entity_type: "PAN"
+    attribute: "pan_number"
+    confidence: 0.95
+
+  - pattern: "Permanent Account Number[\\s:]*([A-Z]{5}[0-9]{4}[A-Z]{1})"
+    entity_type: "PAN"
+    attribute: "pan_number"
+    confidence: 0.90
+
+  - pattern: "Tax ID[\\s:]*([A-Z]{5}[0-9]{4}[A-Z]{1})"
+    entity_type: "PAN"
+    attribute: "pan_number"
+    confidence: 0.85
+
+  - pattern: "Amount[\\s:]*[₹$€£]?([0-9,]+(\\.[0-9]{2})?)"
+    entity_type: "FINANCIAL_TRANSACTION"
+    attribute: "amount"
+    confidence: 0.90
+
+  - pattern: "Date[\\s:]*([0-9]{1,2}/[0-9]{1,2}/[0-9]{4})"
+    entity_type: "DATE"
+    attribute: "date"
+    confidence: 0.85
+
+  - pattern: "Judge[\\s:]*([A-Za-z\\s]+)"
+    entity_type: "JUDGE"
+    attribute: "name"
+    confidence: 0.90
+
+  - pattern: "Filing Date[\\s:]*([0-9]{1,2}/[0-9]{1,2}/[0-9]{4})"
+    entity_type: "CASE"
+    attribute: "filing_date"
+    confidence: 0.95
+
+key_terms:
+  - "litigation"
+  - "settlement"
+  - "compliance"
+  - "regulation"
+  - "liability"
+  - "damages"
+  - "jurisdiction"
+  - "precedent"
+  - "statute"
+  - "constitution"
+  - "contract"
+  - "agreement"
+  - "breach"
+  - "remedy"
+  - "injunction"
+  - "subpoena"
+  - "deposition"
+  - "testimony"
+  - "evidence"
+  - "discovery"
+  - "mediation"
+  - "arbitration"
+  - "appeal"
+  - "verdict"
+  - "judgment"
+  - "execution"
+  - "enforcement"
+  - "bankruptcy"
+  - "insolvency"
+  - "merger"
+  - "acquisition"
+  - "intellectual_property"
+  - "patent"
+  - "trademark"
+  - "copyright"
+  - "trade_secret"
+
+reasoning_templates:
+  - name: "liability_assessment"
+    steps:
+      "1": "identify_party_roles"
+      "2": "extract_key_obligations"
+      "3": "map_breaches_and_remedies"
+      "4": "assess_risk_factors"
+      "5": "generate_recommendation"
+    triggers: ["liability", "breach", "damages"]
+    confidence_threshold: 0.8
+
+  - name: "jurisdiction_check"
+    steps:
+      "1": "identify_jurisdiction"
+      "2": "check_court_rules"
+      "3": "assess_venue_suitability"
+      "4": "flag_conflicts"
+    triggers: ["jurisdiction", "venue", "court"]
+    confidence_threshold: 0.7
+
+relationship_types:
+  - type: "INVOLVED_IN"
+    business_context:
+      role_required: true
+      liability_tracking: true
+  - type: "REPRESENTS"
+    business_context:
+      retainer_required: true
+      conflict_check: true
+  - type: "CONTAINS"
+    business_context:
+      relevance_scoring: true
+      review_status: true
+
+entity_aliases:
+  CLIENT:
+    - "customer"
+    - "party"
+  ATTORNEY:
+    - "lawyer"
+    - "counsel"
+  LEGAL_DOCUMENT:
+    - "contract"
+    - "agreement"
+
+business_context:
+  risk_levels: ["low", "medium", "high", "critical"]
+  compliance_frameworks: ["SOX", "GDPR", "CCPA"]
+  confidentiality_levels: ["public", "internal", "confidential", "privileged"]
+  urgency_levels: ["routine", "expedited", "emergency"]
+
+relationships:
+  - name: "REPRESENTS"
+    from: "ATTORNEY"
+    to: "CLIENT"
+    attributes:
+      - "representation_type"
+      - "start_date"
+      - "end_date"
+      - "scope"
+      - "fees"
+      - "retainer_amount"
+    synonyms:
+      - "acts_for"
+      - "counsels"
+      - "advises"
+      - "defends"
+      - "prosecutes"
+
+  - name: "INVOLVED_IN"
+    from: "CLIENT"
+    to: "CASE"
+    attributes:
+      - "role"
+      - "involvement_date"
+      - "status"
+      - "liability_amount"
+      - "claim_amount"
+    synonyms:
+      - "party_to"
+      - "subject_of"
+      - "involved_in"
+      - "affected_by"
+
+  - name: "FILED_IN"
+    from: "CASE"
+    to: "COURT"
+    attributes:
+      - "filing_date"
+      - "case_number"
+      - "status"
+      - "next_hearing"
+      - "filing_fees"
+    synonyms:
+      - "pending_in"
+      - "heard_by"
+      - "decided_by"
+      - "appealed_to"
+
+  - name: "DOCUMENTS"
+    from: "LEGAL_DOCUMENT"
+    to: "CASE"
+    attributes:
+      - "document_role"
+      - "submission_date"
+      - "evidence_type"
+      - "relevance"
+      - "admissibility"
+    synonyms:
+      - "supports"
+      - "evidences"
+      - "proves"
+      - "establishes"
+
+  - name: "OWNS"
+    from: "CLIENT"
+    to: "PAN"
+    attributes:
+      - "ownership_type"
+      - "registration_date"
+      - "status"
+      - "linked_documents"
+    synonyms:
+      - "holds"
+      - "possesses"
+      - "registered_to"
+      - "belongs_to"
+
+business_patterns:
+  - name: "Litigation Process"
+    description: "Standard litigation workflow"
+    stages:
+      - "case_initiation"
+      - "pleadings"
+      - "discovery"
+      - "pre_trial"
+      - "trial"
+      - "judgment"
+      - "appeal"
+    triggers:
+      - "legal_dispute"
+      - "breach_of_contract"
+      - "tort_claim"
+      - "regulatory_violation"
+    entities_involved:
+      - "CLIENT"
+      - "ATTORNEY"
+      - "CASE"
+      - "COURT"
+      - "LEGAL_DOCUMENT"
+    tags:
+      - "litigation"
+      - "dispute_resolution"
+      - "court_proceedings"
+      - "legal_action"
+    decision_points:
+      - "settlement_opportunity"
+      - "motion_to_dismiss"
+      - "summary_judgment"
+      - "appeal_deadline"
+
+  - name: "Contract Negotiation"
+    description: "Contract creation and negotiation process"
+    stages:
+      - "drafting"
+      - "review"
+      - "negotiation"
+      - "approval"
+      - "execution"
+      - "implementation"
+    triggers:
+      - "business_agreement"
+      - "service_contract"
+      - "employment_contract"
+      - "partnership_agreement"
+    entities_involved:
+      - "CLIENT"
+      - "ATTORNEY"
+      - "LEGAL_DOCUMENT"
+    tags:
+      - "contract_management"
+      - "agreement_negotiation"
+      - "legal_documentation"
+      - "business_contracts"
+    decision_points:
+      - "terms_acceptance"
+      - "legal_review"
+      - "execution_authority"
+      - "compliance_check"
+
+question_templates:
+  entity_extraction:
+    - template: "What is the {entity_type} mentioned in this document?"
+      entity_types: ["case_number", "client_name", "attorney_name", "court_name"]
+      attributes: []
+      priority: "high"
+      expected_answer_type: "string"
+
+    - template: "Who are all the {entity_type}s involved in this matter?"
+      entity_types: ["parties", "attorneys", "witnesses", "judges"]
+      attributes: []
+      priority: "high"
+      expected_answer_type: "list"
+
+    - template: "What is the {attribute} of the {entity_type}?"
+      entity_types: ["client", "case", "attorney", "court"]
+      attributes: ["status", "type", "jurisdiction", "specialization"]
+      priority: "medium"
+      expected_answer_type: "string"
+
+  relationship_extraction:
+    - template: "What is the relationship between {entity1} and {entity2}?"
+      entity_pairs: [["client", "attorney"], ["case", "court"], ["client", "case"]]
+      attributes: []
+      priority: "high"
+      expected_answer_type: "relationship"
+
+    - template: "Who represents whom in this matter?"
+      attributes: []
+      priority: "high"
+      expected_answer_type: "relationship"
+
+    - template: "What documents support this case?"
+      attributes: []
+      priority: "medium"
+      expected_answer_type: "list"
+
+  business_process:
+    - template: "What is the current stage of this {process_type}?"
+      process_types: ["litigation", "contract", "compliance", "transaction"]
+      attributes: []
+      priority: "high"
+      expected_answer_type: "string"
+
+    - template: "What are the next steps in this {process_type}?"
+      process_types: ["litigation", "contract", "compliance", "transaction"]
+      attributes: []
+      priority: "high"
+      expected_answer_type: "list"
+
+    - template: "What deadlines are associated with this matter?"
+      attributes: []
+      priority: "critical"
+      expected_answer_type: "list"
+
+  financial_extraction:
+    - template: "What are the financial amounts mentioned in this document?"
+      attributes: []
+      priority: "high"
+      expected_answer_type: "list"
+
+    - template: "What is the {financial_type} amount?"
+      financial_types: ["dispute", "settlement", "fees", "damages", "costs"]
+      attributes: []
+      priority: "high"
+      expected_answer_type: "number"
+
+    - template: "What are the payment terms and conditions?"
+      attributes: []
+      priority: "medium"
+      expected_answer_type: "text"
+
+multihop_questions:
+  - template: "If {condition1}, then what are the implications for {entity}?"
+    examples:
+      - "If the case is dismissed, then what are the implications for the client?"
+      - "If the contract is breached, then what are the implications for the parties?"
+    priority: "high"
+    reasoning_type: "causal"
+
+  - template: "What would happen if {scenario} in this {context}?"
+    examples:
+      - "What would happen if the deadline is missed in this litigation?"
+      - "What would happen if the settlement is rejected in this case?"
+    priority: "high"
+    reasoning_type: "hypothetical"
+
+  - template: "How does {entity1} relate to {entity2} through {intermediary}?"
+    examples:
+      - "How does the client relate to the court through the attorney?"
+      - "How does the case relate to the settlement through the negotiations?"
+    priority: "medium"
+    reasoning_type: "relational"
+
+business_rules:
+  - name: "case_status_workflow"
+    description: "Valid case status transitions"
+    rules:
+      - "filed -> active"
+      - "active -> settled"
+      - "active -> dismissed"
+      - "active -> judgment"
+      - "judgment -> appealed"
+      - "appealed -> affirmed"
+      - "appealed -> reversed"
+
+  - name: "document_requirements"
+    description: "Required documents for different case types"
+    rules:
+      - "civil_litigation: complaint, answer, discovery_documents"
+      - "criminal_case: indictment, plea, evidence"
+      - "contract_dispute: contract, correspondence, invoices"
+      - "employment_dispute: employment_agreement, termination_letter"
+
+  - name: "deadline_calculations"
+    description: "Legal deadline calculations"
+    rules:
+      - "filing_deadline: 3_years_from_cause_of_action"
+      - "appeal_deadline: 30_days_from_judgment"
+      - "response_deadline: 21_days_from_service"
+      - "discovery_deadline: 6_months_from_case_initiation"
+
+validation_rules:
+  required_fields:
+    case: ["case_number", "filing_date", "court"]
+    client: ["name", "contact_info"]
+    attorney: ["name", "bar_number"]
+    legal_document: ["document_type", "date", "author"]

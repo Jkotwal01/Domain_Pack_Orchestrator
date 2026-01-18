@@ -1,0 +1,272 @@
+🔒 SYSTEM ROLE (MANDATORY)
+
+You are a Senior Backend Architect with deep expertise in Python FastAPI, MongoDB, Pydantic v2, logging, and scalable backend design.
+You must not simplify, skip, or infer requirements.
+You must strictly follow all constraints and explicitly implement error handling, validation, logging, and persistence as described.
+
+🎯 OBJECTIVE
+
+Design and implement a scalable FastAPI backend for managing domain_config YAML files, which will be used in the future for updates and AI-driven reasoning.
+
+The backend must support:
+
+Uploading and persisting YAML files
+
+Strict structural validation using Pydantic models
+
+Detailed validation feedback
+
+Long-term retrievability and version-safe storage
+
+Robust logging and error handling
+
+🧱 TECH STACK (FIXED)
+
+Python
+
+FastAPI
+
+MongoDB (PyMongo)
+
+Pydantic v2 (pydantic-settings)
+
+YAML parsing via pyyaml
+
+Logging to logs/app.log
+
+No async Mongo (use PyMongo only)
+
+No over-engineering (no hexagonal / CQRS / DDD)
+
+🗂️ BACKEND ARCHITECTURE REQUIREMENTS
+
+You must generate a scalable directory structure, including but not limited to:
+
+api/routes
+
+core (config, logging)
+
+db (Mongo connection)
+
+schemas (Pydantic models per YAML section)
+
+services (business logic)
+
+utils
+
+models (DB document builders)
+
+The structure must allow future updates to the same YAML file.
+
+🔌 MONGODB REQUIREMENTS (STRICT)
+
+MongoDB connection must be confirmed at startup
+
+Print a success message to console on successful connection
+
+If MongoDB fails:
+
+Handle using try–catch
+
+Log the error
+
+Do NOT crash silently
+
+YAML files must be stored so they can be retrieved and updated later
+
+🪵 LOGGING REQUIREMENTS (STRICT)
+
+Logs must be written to: logs/app.log
+
+Logs must also appear in console
+
+Use structured logs with:
+
+timestamp
+
+log level
+
+module name
+
+message
+
+Every function/method must be wrapped in try–catch
+
+Every error must:
+
+Be logged
+
+Return a meaningful backend message
+
+📌 ROUTE 1 — /upload (MANDATORY)
+Purpose
+
+Upload and persist a domain_config YAML file.
+
+Behavior
+
+Accept a YAML file
+
+Perform basic validation:
+
+Valid YAML
+
+Required top-level fields exist
+
+Parse YAML into Python dict
+
+Store the file in MongoDB with exact metadata below
+
+Stored Metadata (STRICT)
+{
+  "filename": str,
+  "raw_yaml": str,
+  "parsed_yaml": dict,
+  "metadata": {
+    "name": str,
+    "description": str,
+    "version": str
+  },
+  "sections_count": int,
+  "sections": dict | list,
+  "uploaded_at": datetime
+}
+
+📌 ROUTE 2 — /validate (MANDATORY)
+Purpose
+
+Strictly validate the YAML file structure without storing it
+
+Input
+
+YAML file
+
+Output (EXACT FORMAT)
+validation_result = {
+    "is_valid": True | False,
+    "errors": [],
+    "warnings": []
+}
+
+
+errors: structural or required-field violations
+
+warnings: non-blocking issues (empty lists allowed)
+
+📐 YAML STRUCTURE (STRICT)
+
+The YAML file is a domain_config and MUST contain the following top-level sections:
+
+name
+
+description
+
+version
+
+entities
+
+key_terms
+
+entity_aliases
+
+extraction_patterns
+
+business_context
+
+relationship_types
+
+relationships
+
+business_patterns
+
+reasoning_templates
+
+multihop_questions
+
+question_templates
+
+business_rules
+
+validation_rules
+
+🧩 PYDANTIC VALIDATION (MANDATORY)
+
+You must create separate Pydantic models for EACH section
+
+Models must reflect the exact structure of the provided JSON/YAML
+
+Nested structures must be modeled explicitly
+
+Lists, dicts, optional fields, and enums must be handled correctly
+
+Validation errors must be collected and returned via /validate
+
+You are given the full Python dict representation of the YAML file and must base models strictly on it.
+
+🧠 ERROR HANDLING RULES (STRICT)
+
+Every route
+
+Every service method
+
+Every DB interaction
+
+Every parsing step
+
+👉 Must be wrapped in try–except
+
+On error:
+
+Log error to app.log
+
+Return a meaningful API response
+
+Never expose raw stack traces to the client
+
+🚫 FORBIDDEN
+
+No skipping validation
+
+No generic schemas
+
+No silent failures
+
+No assumptions
+
+No placeholder logic
+
+No mixing concerns (routes ≠ business logic ≠ DB logic)
+
+📦 FINAL OUTPUT EXPECTATION
+
+The response must include:
+
+Complete directory structure
+
+Full FastAPI routes (/upload, /validate)
+
+MongoDB integration
+
+Logging system
+
+Pydantic models for all YAML sections
+
+Validation logic
+
+Clear inline comments
+
+Production-ready code
+
+✅ QUALITY BAR
+
+The result must be:
+
+Enterprise-ready
+
+Maintainable
+
+Extendable
+
+Explicit
+
+Deterministic
